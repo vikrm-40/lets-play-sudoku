@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Trophy, Clock, Lightbulb, Target, Sparkles } from "lucide-react";
+import { Trophy, Lightbulb, Target, Sparkles } from "lucide-react";
 import { Difficulty } from "@/utils/sudoku";
 import confetti from "canvas-confetti";
 import { useEffect } from "react";
@@ -8,7 +8,6 @@ import { useEffect } from "react";
 interface WinModalProps {
   isOpen: boolean;
   onClose: () => void;
-  time: number;
   mistakes: number;
   hintsUsed: number;
   difficulty: Difficulty;
@@ -18,17 +17,11 @@ interface WinModalProps {
 export const WinModal = ({
   isOpen,
   onClose,
-  time,
   mistakes,
   hintsUsed,
   difficulty,
   onNewGame
 }: WinModalProps) => {
-  const formatTime = (totalSeconds: number) => {
-    const mins = Math.floor(totalSeconds / 60);
-    const secs = totalSeconds % 60;
-    return `${mins}m ${secs}s`;
-  };
 
   useEffect(() => {
     if (isOpen) {
@@ -87,12 +80,7 @@ export const WinModal = ({
         </DialogHeader>
 
         <div className="space-y-4 py-6">
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-card rounded-2xl border border-border">
-              <Clock className="w-6 h-6 mx-auto mb-2 text-primary" />
-              <p className="text-sm text-muted-foreground">Time</p>
-              <p className="text-lg font-bold text-foreground">{formatTime(time)}</p>
-            </div>
+          <div className="grid grid-cols-2 gap-4">
             <div className="text-center p-4 bg-card rounded-2xl border border-border">
               <Target className="w-6 h-6 mx-auto mb-2 text-destructive" />
               <p className="text-sm text-muted-foreground">Mistakes</p>
