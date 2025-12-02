@@ -1,8 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { SudokuBoard } from "@/components/sudoku/SudokuBoard";
 import { NumberPad } from "@/components/sudoku/NumberPad";
 import { GameControls } from "@/components/sudoku/GameControls";
-import { Timer } from "@/components/sudoku/Timer";
 import { WinModal } from "@/components/sudoku/WinModal";
 import {
   generatePuzzle,
@@ -25,15 +24,12 @@ interface GameState {
   isNoteMode: boolean;
   mistakes: number;
   hintsUsed: number;
-  isPaused: boolean;
   isComplete: boolean;
   difficulty: Difficulty;
-  gameTime: number;
 }
 
 const Index = () => {
   const { toast } = useToast();
-  const [resetTrigger, setResetTrigger] = useState(0);
   const [showWinModal, setShowWinModal] = useState(false);
 
   const initializeGame = useCallback((difficulty: Difficulty): GameState => {
@@ -57,10 +53,8 @@ const Index = () => {
       isNoteMode: false,
       mistakes: 0,
       hintsUsed: 0,
-      isPaused: false,
       isComplete: false,
-      difficulty,
-      gameTime: 0
+      difficulty
     };
   }, []);
 
@@ -76,7 +70,7 @@ const Index = () => {
   }, []);
 
   const handleCellSelect = (row: number, col: number) => {
-    if (gameState.isComplete || gameState.isPaused) return;
+    if (gameState.isComplete) return;
 
     setGameState(prev => {
       const selectedValue = prev.board[row][col].value;
@@ -103,7 +97,7 @@ const Index = () => {
   };
 
   const handleNumberSelect = (num: number) => {
-    if (!gameState.selectedCell || gameState.isComplete || gameState.isPaused) return;
+    if (!gameState.selectedCell || gameState.isComplete) return;
 
     const { row, col } = gameState.selectedCell;
     const cell = gameState.board[row][col];
@@ -170,7 +164,7 @@ const Index = () => {
   };
 
   const handleErase = () => {
-    if (!gameState.selectedCell || gameState.isComplete || gameState.isPaused) return;
+    if (!gameState.selectedCell || gameState.isComplete) return;
 
     const { row, col } = gameState.selectedCell;
     const cell = gameState.board[row][col];
@@ -223,7 +217,7 @@ const Index = () => {
   };
 
   const handleHint = () => {
-    if (gameState.isComplete || gameState.isPaused) return;
+    if (gameState.isComplete) return;
 
     const plainBoard = gameState.board.map(row => row.map(cell => cell.value));
     const hint = getHint(plainBoard, gameState.solution);
@@ -259,16 +253,11 @@ const Index = () => {
 
   const handleNewGame = (difficulty: Difficulty) => {
     setGameState(initializeGame(difficulty));
-    setResetTrigger(prev => prev + 1);
     setShowWinModal(false);
     toast({
       title: "New Game Started! 🎮",
       description: `Difficulty: ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}`,
     });
-  };
-
-  const handlePause = () => {
-    setGameState(prev => ({ ...prev, isPaused: !prev.isPaused }));
   };
 
   return (
@@ -286,32 +275,12 @@ const Index = () => {
           <p className="text-lg text-muted-foreground">Challenge your brain with colorful puzzles!</p>
         </div>
 
-        {/* Timer */}
-        <div className="flex justify-center">
-          <div className="bg-card px-8 py-4 rounded-3xl shadow-[var(--shadow-card)] border-2 border-border">
-            <Timer
-              isRunning={!gameState.isPaused && !gameState.isComplete}
-              resetTrigger={resetTrigger}
-              onTimeUpdate={(seconds) => setGameState(prev => ({ ...prev, gameTime: seconds }))}
-            />
-          </div>
-        </div>
-
         {/* Game Board */}
-        {gameState.isPaused ? (
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center space-y-4 bg-card p-12 rounded-3xl shadow-[var(--shadow-card)] border-2 border-border">
-              <p className="text-3xl font-bold text-primary">Game Paused</p>
-              <p className="text-muted-foreground">Take a break! Click Play to continue.</p>
-            </div>
-          </div>
-        ) : (
-          <SudokuBoard
-            board={gameState.board}
-            selectedCell={gameState.selectedCell}
-            onCellSelect={handleCellSelect}
-          />
-        )}
+        <SudokuBoard
+          board={gameState.board}
+          selectedCell={gameState.selectedCell}
+          onCellSelect={handleCellSelect}
+        />
 
         {/* Number Pad */}
         <NumberPad
@@ -321,7 +290,7 @@ const Index = () => {
           onToggleNoteMode={() =>
             setGameState(prev => ({ ...prev, isNoteMode: !prev.isNoteMode }))
           }
-          disabled={gameState.isComplete || gameState.isPaused || !gameState.selectedCell}
+          disabled={gameState.isComplete || !gameState.selectedCell}
         />
 
         {/* Game Controls */}
@@ -330,12 +299,10 @@ const Index = () => {
           onRedo={handleRedo}
           onHint={handleHint}
           onNewGame={handleNewGame}
-          onPause={handlePause}
           mistakes={gameState.mistakes}
           hintsUsed={gameState.hintsUsed}
           canUndo={gameState.historyIndex > 0}
           canRedo={gameState.historyIndex < gameState.history.length - 1}
-          isPaused={gameState.isPaused}
           currentDifficulty={gameState.difficulty}
         />
 
@@ -343,7 +310,6 @@ const Index = () => {
         <WinModal
           isOpen={showWinModal}
           onClose={() => setShowWinModal(false)}
-          time={gameState.gameTime}
           mistakes={gameState.mistakes}
           hintsUsed={gameState.hintsUsed}
           difficulty={gameState.difficulty}

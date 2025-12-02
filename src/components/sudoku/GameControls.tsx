@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Undo2, Redo2, Lightbulb, RotateCcw, Play, Pause, Trophy } from "lucide-react";
+import { Undo2, Redo2, Lightbulb, RotateCcw, Trophy } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Difficulty } from "@/utils/sudoku";
 import { cn } from "@/lib/utils";
@@ -9,12 +9,10 @@ interface GameControlsProps {
   onRedo: () => void;
   onHint: () => void;
   onNewGame: (difficulty: Difficulty) => void;
-  onPause: () => void;
   mistakes: number;
   hintsUsed: number;
   canUndo: boolean;
   canRedo: boolean;
-  isPaused: boolean;
   currentDifficulty: Difficulty;
 }
 
@@ -23,12 +21,10 @@ export const GameControls = ({
   onRedo,
   onHint,
   onNewGame,
-  onPause,
   mistakes,
   hintsUsed,
   canUndo,
   canRedo,
-  isPaused,
   currentDifficulty
 }: GameControlsProps) => {
   return (
@@ -78,14 +74,6 @@ export const GameControls = ({
         >
           <Lightbulb className="w-5 h-5 mr-2 text-warning" />
           Hint
-        </Button>
-        <Button
-          onClick={onPause}
-          variant="outline"
-          size="lg"
-          className="rounded-full shadow-[var(--shadow-card)] hover:shadow-lg transform hover:scale-105 active:scale-95 transition-all"
-        >
-          {isPaused ? <Play className="w-5 h-5" /> : <Pause className="w-5 h-5" />}
         </Button>
       </div>
 
