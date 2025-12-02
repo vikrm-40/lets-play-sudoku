@@ -121,17 +121,17 @@ const Index = () => {
         newBoard[row][col].value = num;
         newBoard[row][col].notes = [];
 
-        // Check if valid
+        // Check if valid according to Sudoku rules
         const tempBoard = newBoard.map(r => r.map(c => c.value));
         const isValid = isValidPlacement(tempBoard, row, col, num);
 
-        if (!isValid || num !== prev.solution[row][col]) {
+        if (!isValid) {
           newBoard[row][col].isError = true;
           const newMistakes = prev.mistakes + 1;
           
           toast({
             title: "Oops!",
-            description: "That's not quite right. Try again!",
+            description: "That breaks Sudoku rules! Try again!",
             variant: "destructive"
           });
 
