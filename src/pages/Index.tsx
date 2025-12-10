@@ -117,13 +117,13 @@ const Index = () => {
           newBoard[row][col].notes.sort();
         }
       } else {
+        // Check if valid according to Sudoku rules BEFORE placing the number
+        const tempBoard = prev.board.map(r => r.map(c => c.value));
+        const isValid = isValidPlacement(tempBoard, row, col, num);
+
         // Place number
         newBoard[row][col].value = num;
         newBoard[row][col].notes = [];
-
-        // Check if valid according to Sudoku rules
-        const tempBoard = newBoard.map(r => r.map(c => c.value));
-        const isValid = isValidPlacement(tempBoard, row, col, num);
 
         if (!isValid) {
           newBoard[row][col].isError = true;
