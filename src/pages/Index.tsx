@@ -1,7 +1,8 @@
 import { useState, useCallback } from "react";
 import { SudokuBoard } from "@/components/sudoku/SudokuBoard";
 import { NumberPad } from "@/components/sudoku/NumberPad";
-import { GameControls } from "@/components/sudoku/GameControls";
+import { ActionControls } from "@/components/sudoku/ActionControls";
+import { DifficultyControls } from "@/components/sudoku/DifficultyControls";
 import { WinModal } from "@/components/sudoku/WinModal";
 import {
   generatePuzzle,
@@ -275,7 +276,7 @@ const Index = () => {
           <p className="text-lg text-muted-foreground">Challenge your brain with colorful puzzles!</p>
         </div>
 
-        {/* Game Board + Number Pad Side by Side */}
+        {/* Game Board + Controls Side by Side */}
         <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-4 lg:gap-6">
           <SudokuBoard
             board={gameState.board}
@@ -283,7 +284,7 @@ const Index = () => {
             onCellSelect={handleCellSelect}
           />
 
-          <div className="lg:pt-4">
+          <div className="lg:pt-4 space-y-4">
             <NumberPad
               onNumberSelect={handleNumberSelect}
               onErase={handleErase}
@@ -293,19 +294,21 @@ const Index = () => {
               }
               disabled={gameState.isComplete || !gameState.selectedCell}
             />
+            <ActionControls
+              onUndo={handleUndo}
+              onRedo={handleRedo}
+              onHint={handleHint}
+              mistakes={gameState.mistakes}
+              hintsUsed={gameState.hintsUsed}
+              canUndo={gameState.historyIndex > 0}
+              canRedo={gameState.historyIndex < gameState.history.length - 1}
+            />
           </div>
         </div>
 
-        {/* Game Controls */}
-        <GameControls
-          onUndo={handleUndo}
-          onRedo={handleRedo}
-          onHint={handleHint}
+        {/* Difficulty & New Game */}
+        <DifficultyControls
           onNewGame={handleNewGame}
-          mistakes={gameState.mistakes}
-          hintsUsed={gameState.hintsUsed}
-          canUndo={gameState.historyIndex > 0}
-          canRedo={gameState.historyIndex < gameState.history.length - 1}
           currentDifficulty={gameState.difficulty}
         />
 
