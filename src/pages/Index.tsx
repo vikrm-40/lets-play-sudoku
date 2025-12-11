@@ -275,23 +275,26 @@ const Index = () => {
           <p className="text-lg text-muted-foreground">Challenge your brain with colorful puzzles!</p>
         </div>
 
-        {/* Game Board */}
-        <SudokuBoard
-          board={gameState.board}
-          selectedCell={gameState.selectedCell}
-          onCellSelect={handleCellSelect}
-        />
+        {/* Game Board + Number Pad Side by Side */}
+        <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-4 lg:gap-6">
+          <SudokuBoard
+            board={gameState.board}
+            selectedCell={gameState.selectedCell}
+            onCellSelect={handleCellSelect}
+          />
 
-        {/* Number Pad */}
-        <NumberPad
-          onNumberSelect={handleNumberSelect}
-          onErase={handleErase}
-          isNoteMode={gameState.isNoteMode}
-          onToggleNoteMode={() =>
-            setGameState(prev => ({ ...prev, isNoteMode: !prev.isNoteMode }))
-          }
-          disabled={gameState.isComplete || !gameState.selectedCell}
-        />
+          <div className="lg:pt-4">
+            <NumberPad
+              onNumberSelect={handleNumberSelect}
+              onErase={handleErase}
+              isNoteMode={gameState.isNoteMode}
+              onToggleNoteMode={() =>
+                setGameState(prev => ({ ...prev, isNoteMode: !prev.isNoteMode }))
+              }
+              disabled={gameState.isComplete || !gameState.selectedCell}
+            />
+          </div>
+        </div>
 
         {/* Game Controls */}
         <GameControls
