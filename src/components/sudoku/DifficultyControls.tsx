@@ -1,14 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, RefreshCw } from "lucide-react";
 import { Difficulty } from "@/utils/sudoku";
 
 interface DifficultyControlsProps {
   onNewGame: (difficulty: Difficulty) => void;
+  onReset: () => void;
   currentDifficulty: Difficulty;
 }
 
 export const DifficultyControls = ({
   onNewGame,
+  onReset,
   currentDifficulty
 }: DifficultyControlsProps) => {
   return (
@@ -36,6 +38,15 @@ export const DifficultyControls = ({
         className="rounded-full"
       >
         Hard
+      </Button>
+      <Button
+        onClick={onReset}
+        variant="ghost"
+        size="sm"
+        className="rounded-full"
+      >
+        <RefreshCw className="w-4 h-4 mr-2" />
+        Reset
       </Button>
       <Button
         onClick={() => onNewGame(currentDifficulty)}
