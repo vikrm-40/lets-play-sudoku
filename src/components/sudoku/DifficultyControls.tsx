@@ -1,14 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, RefreshCw } from "lucide-react";
 import { Difficulty } from "@/utils/sudoku";
 
 interface DifficultyControlsProps {
   onNewGame: (difficulty: Difficulty) => void;
+  onReset: () => void;
   currentDifficulty: Difficulty;
 }
 
 export const DifficultyControls = ({
   onNewGame,
+  onReset,
   currentDifficulty
 }: DifficultyControlsProps) => {
   return (
