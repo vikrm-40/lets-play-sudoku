@@ -10,36 +10,32 @@ interface SudokuCellProps {
 }
 
 export const SudokuCell = ({ cell, row, col, isSelected, onSelect }: SudokuCellProps) => {
-  const { value, isInitial, notes, isError, isHighlighted } = cell;
+  const { value, isInitial, notes, isError, isHighlighted, isPeer, isConflict } = cell;
 
   return (
     <button
       className={cn(
         "aspect-square w-full flex items-center justify-center relative",
-        "transition-all duration-200",
+        "transition-all duration-150",
         "border border-border/30",
         "hover:bg-primary/5",
-        "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:z-10",
-        // Grid lines
+        "focus:outline-none",
         col % 3 === 2 && col !== 8 && "border-r-2 border-r-border",
         row % 3 === 2 && row !== 8 && "border-b-2 border-b-border",
-        // Initial cells
         isInitial && "bg-muted/30 font-bold",
-        // Selected cell
-        isSelected && "bg-primary/20 ring-2 ring-primary shadow-lg scale-105 z-20",
-        // Highlighted cells (same number)
+        isPeer && !isSelected && "bg-primary/5",
         isHighlighted && !isSelected && "bg-accent/30",
-        // Error state
-        isError && "bg-destructive/20 text-destructive animate-wiggle"
+        isSelected && "bg-primary/20 ring-2 ring-primary z-20",
+        isConflict && "bg-destructive/15",
+        isError && "bg-destructive/25 animate-wiggle"
       )}
       onClick={() => onSelect(row, col)}
-      disabled={isInitial}
     >
       {value ? (
         <span className={cn(
           "text-2xl md:text-3xl font-semibold",
           isInitial ? "text-foreground" : "text-primary",
-          isError && "text-destructive"
+          (isError || isConflict) && "text-destructive"
         )}>
           {value}
         </span>
