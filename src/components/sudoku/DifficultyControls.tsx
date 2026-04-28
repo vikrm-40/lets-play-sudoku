@@ -40,6 +40,15 @@ export const DifficultyControls = ({
         Hard
       </Button>
       <Button
+        onClick={onReset}
+        variant="ghost"
+        size="sm"
+        className="rounded-full"
+      >
+        <RefreshCw className="w-4 h-4 mr-2" />
+        Reset
+      </Button>
+      <Button
         onClick={() => onNewGame(currentDifficulty)}
         variant="ghost"
         size="sm"
